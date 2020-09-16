@@ -24,6 +24,7 @@ export interface TemplateCompileOptions {
   preprocessOptions?: any
   transpileOptions?: any
   isProduction?: boolean
+  showWarnings?: boolean
   isFunctional?: boolean
   optimizeSSR?: boolean
   prettify?: boolean
@@ -107,6 +108,7 @@ function actuallyCompile(
     transformAssetUrls,
     transformAssetUrlsOptions,
     isProduction = process.env.NODE_ENV === 'production',
+    showWarnings = process.env.WARNING_LEVEL !== 'none',
     isFunctional = false,
     optimizeSSR = false,
     prettify = true
@@ -167,7 +169,7 @@ function actuallyCompile(
     // maintain backwards compat
     code = code.replace(/\s__(render|staticRenderFns)__\s/g, ' $1 ')
 
-    if (!isProduction) {
+    if (!isProduction || showWarnings) {
       // mark with stripped (this enables Vue to use correct runtime proxy
       // detection)
       code += `render._withStripped = true`
